@@ -2,3 +2,5 @@ target/
 *.class
 nbactions.xml
 jrebel.xml
+src/main/resources/oauth.properties
+nb-configuration.xml

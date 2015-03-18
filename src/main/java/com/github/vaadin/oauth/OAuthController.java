@@ -8,6 +8,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,36 +60,34 @@ public class OAuthController {
             @QueryParam("code") String code,
             @Context HttpServletRequest request) {
         if (error != null) {
-            return Response.seeOther(getURI("/main?login_error=" + error)).build();
+            return Response.seeOther(getURI("../main?login_error=" + error)).build();
         }
 
         OAuthProviderType p = OAuthProvider.getByName(provider);
         OAuthTokenResponse tokenResponse;
 
-        String name;
+        String email;
         switch (p) {
             case FACEBOOK:
-                name = facebook(code);
+                email = facebook(code);
                 break;
             case GOOGLE:
                 tokenResponse = oAuthUtil.getByName(provider).getOAuth().access(code).get();
-                name = google(tokenResponse.getAccess_token());
+                email = google(tokenResponse.getAccess_token());
                 break;
             case GITHUB:
                 tokenResponse = oAuthUtil.getByName(provider).getOAuth().access(code).get();
-                name = github(tokenResponse.getAccess_token());
+                email = github(tokenResponse.getAccess_token());
                 break;
             case LINKEDIN:
                 tokenResponse = oAuthUtil.getByName(provider).getOAuth().access(code).get();
-                name = linkedin(tokenResponse.getAccess_token());
+                email = linkedin(tokenResponse.getAccess_token());
                 break;
             default:
                 throw new IllegalStateException("Unknown " + p);
         }
-        request.getSession().setAttribute("USER_NAME", name);
-//        MyUI myUI = (MyUI) UI.getCurrent();
-//        myUI.setUserName(name);
-        return Response.seeOther(getURI("http://localhost:8080/vaadin-oauth-1.0.0-SNAPSHOT/main")).build();
+        request.getSession().setAttribute("EMAIL", email);
+        return Response.seeOther(getURI("../main")).build();
     }
 
     private String facebook(String code) {
@@ -120,7 +120,10 @@ public class OAuthController {
         HttlResponseExtractor.ExtractedResponse<Map> response = sender.GET("/plus/v1/people/me")
                 .header("Authorization", "Bearer " + access_token).extract(Map.class);
         Map map = response.getBody();
-        return (String) map.get("displayName");
+        List<LinkedHashMap> emails = (List<LinkedHashMap>) map.get("emails");
+        String email = (String)emails.get(0).get("value");
+        return email;
+        //return (String) map.get("displayName");
     }
 
     private String github(String access_token) {

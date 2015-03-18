@@ -26,7 +26,7 @@ public class MyUI extends UI {
     @Inject
     OAuthUtil oAuthUtil;
 
-    private String userName;
+    private String email;
     private Label nameLabel;
 
     @Override
@@ -58,17 +58,17 @@ public class MyUI extends UI {
         nameLabel.setImmediate(true);
         layout.addComponent(nameLabel);
         HttpServletRequest request = (HttpServletRequest) vaadinRequest;
-        userName = (String) request.getSession().getAttribute("USER_NAME");
-        nameLabel.setCaption(userName);
+        email = (String) request.getSession().getAttribute("EMAIL");
+        nameLabel.setCaption(email);
 
     }
 
     public String getUserName() {
-        return userName;
+        return email;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.email = userName;
         nameLabel.setCaption(userName);
     }
 
