@@ -33,8 +33,8 @@ public class OAuthUtil {
         Properties properties = load("oauth.properties");
         String redirectUri = properties.getProperty("oauth.redirect_uri");
         oAuthProviders = new ArrayList<>();
-        oAuthProviders.add(new OAuthProvider(OAuthProvider.OAuthProviderType.GOOGLE, buildGoogle(properties, redirectUri), "openid profile email"));
-        //oAuthProviders.add(new OAuthProvider(OAuthProvider.OAuthProviderType.FACEBOOK, buildFacebook(properties, redirectUri), "public_profile"));
+        oAuthProviders.add(new OAuthProvider(OAuthProvider.OAuthProviderType.GOOGLE, buildGoogle(properties, redirectUri), "email"));
+        oAuthProviders.add(new OAuthProvider(OAuthProvider.OAuthProviderType.FACEBOOK, buildFacebook(properties, redirectUri), "email"));
         //oAuthProviders.add(new OAuthProvider(OAuthProvider.OAuthProviderType.LINKEDIN, buildLinkedIn(properties, redirectUri), "r_basicprofile"));
         //oAuthProviders.add(new OAuthProvider(OAuthProvider.OAuthProviderType.GITHUB, buildGithub(properties, redirectUri), ""));
     }

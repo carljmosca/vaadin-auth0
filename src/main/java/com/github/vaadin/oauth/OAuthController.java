@@ -101,7 +101,7 @@ public class OAuthController {
         HttlResponseExtractor.ExtractedResponse<Map> response = sender.GET("/me").header("Authorization", "Bearer " + access_token)
                 .extract(Map.class);
         Map map = response.getBody();
-        return (String) map.get("name");
+        return (String) map.get("email");
     }
 
     private String linkedin(String access_token) {
